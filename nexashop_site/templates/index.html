@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NexaShop | Sua loja</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</head>
+<body>
+<header class="topo">
+  <a class="marca" href="#inicio">Nexa<span>Shop</span> ✦</a>
+  <nav aria-label="Menu principal">
+    <a href="#inicio" data-aba="inicio">Início</a>
+    <a href="#carrinho" data-aba="carrinho">Carrinho <span id="contador">0</span></a>
+    <a href="#compras" data-aba="compras">Minhas Compras</a>
+  </nav>
+</header>
+<main>
+  <section id="inicio" class="pagina">
+    <div class="banner"><div><p class="sobretitulo">BEM-VINDO À NEXASHOP</p><h1>Seu próximo favorito está aqui.</h1><p>Explore novidades, encontre ofertas e escolha o que combina com você.</p><a class="botao" href="#produtos">Explorar catálogo →</a></div><div class="banner-icone" aria-hidden="true">✦</div></div>
+    <div class="secao-titulo" id="produtos"><div><p class="sobretitulo">DESCUBRA</p><h2>Nosso catálogo</h2></div><input id="busca" type="search" placeholder="Buscar produtos..." aria-label="Buscar produtos"></div>
+    <div class="catalogo" id="catalogo">
+      {% for produto in produtos %}
+      <article class="card" data-nome="{{ produto.nome|lower }}" data-categoria="{{ produto.categoria|lower }}">
+        <div class="imagem-produto">
+          {% if produto.imagem %}<img src="{{ produto.imagem }}" alt="Imagem de {{ produto.nome }}" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span class="sem-imagem" hidden>📦</span>{% else %}<span class="sem-imagem">📦</span>{% endif %}
+        </div>
+        <div class="card-conteudo"><span class="categoria">{{ produto.categoria }}</span><h3>{{ produto.nome }}</h3><p class="descricao">{{ produto.descricao }}</p>
+        <div class="avaliacao">{% if produto.total_avaliacoes %}★ {{ produto.media }} ({{ produto.total_avaliacoes }}){% else %}☆ Sem avaliações{% endif %}</div>
+        <div class="card-rodape"><strong>R$ {{ '%.2f'|format(produto.preco)|replace('.', ',') }}</strong><span>{{ produto.estoque }} em estoque</span></div>
+        <button class="botao adicionar" type="button" data-id="{{ produto.id }}" data-nome="{{ produto.nome }}" data-preco="{{ produto.preco }}" data-imagem="{{ produto.imagem }}" {% if produto.estoque == 0 %}disabled{% endif %}>{% if produto.estoque == 0 %}Esgotado{% else %}Adicionar ao carrinho{% endif %}</button>
+        </div>
+      </article>
+      {% else %}<p class="vazio">Ainda não há produtos cadastrados. Use o formulário abaixo para adicionar o primeiro!</p>{% endfor %}
+    </div>
+    <section id="admin" class="admin"><p class="sobretitulo">GERENCIAMENTO LOCAL</p><h2>Cadastrar produto</h2><p>Área de demonstração. Antes de publicar a loja, vamos proteger este cadastro com login de administrador.</p>
+      {% with mensagens = get_flashed_messages() %}{% for mensagem in mensagens %}<p class="mensagem">{{ mensagem }}</p>{% endfor %}{% endwith %}
+      <form action="{{ url_for('cadastrar') }}" method="post" class="formulario">
+        <label>Nome<input name="nome" required maxlength="120"></label><label>Categoria<input name="categoria" required maxlength="80"></label><label>Preço (R$)<input name="preco" type="number" step="0.01" min="0.01" required></label><label>Estoque<input name="estoque" type="number" min="0" required></label><label class="largo">URL da imagem (opcional)<input name="imagem" type="url" placeholder="https://exemplo.com/foto.jpg"></label><label class="largo">Descrição<textarea name="descricao" required rows="3"></textarea></label><button class="botao" type="submit">Cadastrar produto</button>
+      </form>
+    </section>
+  </section>
+  <section id="carrinho" class="pagina" hidden><p class="sobretitulo">SEUS ESCOLHIDOS</p><h1>Meu carrinho</h1><div id="itens-carrinho"></div><div class="total" id="total-carrinho"></div><p class="aviso">O carrinho funciona neste navegador. O pagamento e o registro de pedidos serão implementados depois.</p></section>
+  <section id="compras" class="pagina" hidden><p class="sobretitulo">HISTÓRICO</p><h1>Minhas compras</h1><div class="painel-vazio">🛍️<h2>Seus pedidos aparecerão aqui.</h2><p>Na próxima etapa, criaremos contas de clientes e pedidos salvos no banco de dados.</p></div></section>
+</main>
+<footer>NexaShop © 2026 · Projeto de estudos</footer>
+</body>
+</html>

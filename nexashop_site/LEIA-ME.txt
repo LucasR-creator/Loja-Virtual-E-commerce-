@@ -1,0 +1,14 @@
+NexaShop — site de estudos
+
+1. Abra esta pasta no VS Code.
+2. No terminal, execute: python -m pip install -r requirements.txt
+3. Execute: python site.py
+4. Abra: http://127.0.0.1:5000
+
+O banco nexashop.db é criado automaticamente na pasta do projeto.
+Se você já tem um banco nexashop.db com seus produtos, copie-o para esta pasta antes de iniciar o site.
+A coluna imagem será adicionada automaticamente caso não exista.
+
+Atenção: o cadastro de produtos não possui autenticação; execute apenas localmente.
+O carrinho é uma demonstração e fica salvo apenas no navegador.
+Minhas Compras e finalização de pedidos serão implementados em etapas futuras.
